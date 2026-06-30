@@ -1,7 +1,6 @@
 #**Welcome to my memory game!**
 
 ##**Special features**
-- **3D Card Animations**
 - **Theme selection**: Choose between 3 custom themes, or select "Random" for a randomised choice. Custom layout per theme.
   - **Harry Potter**: Fetches character images and names.
   - **Dogs**: Fetches cute dog pictures.
