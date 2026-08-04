@@ -57,58 +57,71 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getDogPics = async () => {
-    const apiAnswer = await fetch("https://dog.ceo/api/breeds/image/random/6");
-    const readableJson = await apiAnswer.json();
-    const picData = readableJson.message.map((dogUrl, index) => {
-      return {
-        url: dogUrl,
-        name: `Dog number ${index + 1}` 
-      };
-    });
-    return picData; 
+    try{
+      const apiAnswer = await fetch("https://dog.ceo/api/breeds/image/random/6");
+      const readableJson = await apiAnswer.json();
+      const picData = readableJson.message.map((dogUrl, index) => {
+        return {
+          url: dogUrl,
+          name: `Dog number ${index + 1}` 
+        };
+      });
+      return picData; 
+    } catch (error) {
+        console.error("Error fetching dogs API:", error);
+        return []; // מחזירים מערך ריק במקרה של שגיאה כדי לא להקריס את האתר
+      }
   };
 
   const getHPPics = async () => {
-    const apiAnswer = await fetch("https://hp-api.onrender.com/api/characters");
-    const readableJson = await apiAnswer.json();
-    const charactersWithPics = readableJson.filter((character) => character.image !== "");
-    charactersWithPics.sort(() => 0.5 - Math.random());
-    const selectedCharacters = charactersWithPics.slice(0, 6);
-    const picData = selectedCharacters.map((character) => {
-      return {
-        url:character.image,
-        name:character.name
-      }
-    }
+    try{
+      const apiAnswer = await fetch("https://hp-api.onrender.com/api/characters");
+      const readableJson = await apiAnswer.json();
+      const charactersWithPics = readableJson.filter((character) => character.image !== "");
+      charactersWithPics.sort(() => 0.5 - Math.random());
+      const selectedCharacters = charactersWithPics.slice(0, 6);
+      const picData = selectedCharacters.map((character) => {
+        return {
+          url:character.image,
+          name:character.name
+        }
+      }                                 
   );
     return picData;
-};
+} catch (error) {
+      console.error("Error fetching HP API:", error);
+      return []; 
+    }};
 
   const getFlagPics = async () => {
-    const apiKey = "rc_live_3fb367a605dd473da9a2cf464f5ddb00";
-    const apiAnswer = await fetch("https://api.restcountries.com/countries/v5", {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`
+    try {
+      const apiKey = "rc_live_3fb367a605dd473da9a2cf464f5ddb00";
+      const apiAnswer = await fetch("https://api.restcountries.com/countries/v5", {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`
+          }
+        })
+      const jsonAnswer = await apiAnswer.json();     
+      const readableJson = jsonAnswer.data.objects;
+      readableJson.sort(() => 0.5 - Math.random());
+      const selectedCountries = readableJson.slice(0, 6);
+      const picData = selectedCountries.map((country) => {
+        return {
+          url:country.flag.url_png,
+          name:country.names.common
         }
-      })
-    const jsonAnswer = await apiAnswer.json();     
-    const readableJson = jsonAnswer.data.objects;
-    readableJson.sort(() => 0.5 - Math.random());
-    const selectedCountries = readableJson.slice(0, 6);
-    const picData = selectedCountries.map((country) => {
-      return {
-        url:country.flag.url_png,
-        name:country.names.common
       }
-    }
-  );
-    return picData;
-  };
+    );
+      return picData;
+  } catch (error) {
+      console.error("Error fetching flags API:", error);
+      return [];
+  }};
 
   const putPicsInCards = (picUrls) => {
     const cardPairs = [...picUrls, ...picUrls];
     cardPairs.sort(() => 0.5 - Math.random());
-    const cardElements = document.querySelectorAll(".memoryCard");  
+    const cardElements = document.querySelectorAll(memoryCardSelector);  
     cardElements.forEach((card, index) => {
       const frontPic = card.querySelector(".frontFacePic");
       const frontText = card.querySelector(".frontFaceText");
@@ -122,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleClickFlip = (e) => {
     const clickedCard = e.target.closest(memoryCardSelector);
-    console.log(clickedCard);
     if (firstCard === clickedCard || lockBoard) {
       return;
     }
