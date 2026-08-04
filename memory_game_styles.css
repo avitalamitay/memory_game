@@ -186,3 +186,40 @@ button:active {
   align-items: center;
   gap: 30px;
 }
+
+
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+  .memoryGame {
+    flex-direction: column-reverse;
+    gap: 20px;
+    width: 100%;
+  }
+  .cards {
+    width: 100%;
+    gap: 8px;
+  }
+  .memoryCard {
+    width: calc(33.33% - 10px);
+    aspect-ratio: 1 / 1.4;
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  body {
+    height: auto;
+    padding: 10px;
+  }
+  .memoryGame {
+    flex-direction: row;
+    gap: 15px;
+  }
+  .memoryCard {
+    width: 70px; 
+  }
+}
